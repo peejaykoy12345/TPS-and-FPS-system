@@ -1,0 +1,8 @@
+[package]
+name = "alyas-pogi/tps-n-fps"
+version = "0.1.0"
+registry = "https://github.com/UpliftGames/wally-index"
+realm = "shared"
+
+[dependencies]
+remotes = "chipioindustries/remotes@2.0.0"
