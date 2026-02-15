@@ -84,16 +84,10 @@ function Gun:createTPLocal()
 		ViewModelTPS.Parent = plr.Character
 		ViewModelTPS.Name = "ViewModelTPS(Local)" .. GunName
 		
-		--[[for _, part in ViewModelTPS:GetDescendants() do
-			if part:IsA("BasePart") then
-				local weld = Instance.new("Weld", part)
-				weld.Name = "WeaponWeld"
-				weld.Part0 = plr.Character.Head
-				weld.Part1 = ViewModelTPS.PrimaryPart
-				
-				part.Anchored = false
-			end
-		end]]
+		local weld = Instance.new("Weld", ViewModelTPS.PrimaryPart)
+		weld.Name = "WeaponWeld"
+		weld.Part0 = plr.Character.Head
+		weld.Part1 = ViewModelTPS.PrimaryPart
 		
 		self:MatchArmsToPlayer(plr, ViewModelTPS)
 	end
