@@ -145,43 +145,7 @@ function Gun:Init()
             ViewModelRemote:FireServer(ViewModelTP, equipped, GunName)
             self:SetArmsTransparency(plr, 1)
 
-            connection = RunService.RenderStepped:Connect(function()
-                if plr.Character.Humanoid.Health <= 0 then
-                    equipped = false
-                    return
-                end
-                
-                if not equipped then return end
-                
-                if self:isFirstPerson() then
-                    local FPViewModel = camera:FindFirstChild("ViewModel" .. GunName)
-                    local TPSViewModel = plr.Character:FindFirstChild("ViewModelTPS(Local)" .. GunName)
-                    
-                    if not FPViewModel then
-                        self:createFPVModel()
-                    else
-                        if TPSViewModel then
-                            ViewModelTPS = nil
-                            TPSViewModel:Destroy()
-                        end
-                        
-                        local rotation = camera.CFrame:ToObjectSpace(lastCameraCF)
-                        local x, y = rotation:ToOrientation()
-                        local swayCF = swayCF:Lerp(CFrame.Angles(math.sin(x) * swayAmount, math.sin(y) * swayAmount, 0), 0.1)
-                        lastCameraCF = camera.CFrame
-                        
-                        local primaryPart = FPViewModel.PrimaryPart	
-                        
-                        FPViewModel:SetPrimaryPartCFrame(camera.CFrame * swayCF)
-                    end
-                else
-                    self:destroyFPViewModel_createTPSViewModel()
-                    if plr.Character and ViewModelTPS then 
-                        ViewModelTPS:SetPrimaryPartCFrame(lastCF)
-                        lastCF = plr.Character.Head.CFrame
-                    end
-                end	
-            end)
+            
         end)
 
         gun.Unequipped:Connect(function()
@@ -195,9 +159,47 @@ function Gun:Init()
             
             self:SetArmsTransparency(plr, 0)
 
-            if connection then connection:Disconnect() end
+            --if connection then connection:Disconnect() end
         end)
         table.insert(presentTools, gun)
+    end)
+
+    connection = RunService.RenderStepped:Connect(function()
+        if plr.Character.Humanoid.Health <= 0 then
+            equipped = false
+            return
+        end
+        
+        if not equipped then return end
+        
+        if self:isFirstPerson() then
+            local FPViewModel = camera:FindFirstChild("ViewModel" .. GunName)
+            local TPSViewModel = plr.Character:FindFirstChild("ViewModelTPS(Local)" .. GunName)
+            
+            if not FPViewModel then
+                self:createFPVModel()
+            else
+                if TPSViewModel then
+                    ViewModelTPS = nil
+                    TPSViewModel:Destroy()
+                end
+                
+                local rotation = camera.CFrame:ToObjectSpace(lastCameraCF)
+                local x, y = rotation:ToOrientation()
+                local swayCF = swayCF:Lerp(CFrame.Angles(math.sin(x) * swayAmount, math.sin(y) * swayAmount, 0), 0.1)
+                lastCameraCF = camera.CFrame
+                
+                local primaryPart = FPViewModel.PrimaryPart	
+                
+                FPViewModel:SetPrimaryPartCFrame(camera.CFrame * swayCF)
+            end
+        else
+            self:destroyFPViewModel_createTPSViewModel()
+            if plr.Character and ViewModelTPS then 
+                ViewModelTPS:SetPrimaryPartCFrame(lastCF)
+                lastCF = plr.Character.Head.CFrame
+            end
+        end	
     end)
 end
 
