@@ -14,6 +14,7 @@ local head = char.Head
 local remotes = require(ReplicatedStorage.Packages.remotes)
 
 local ViewModelRemote: RemoteEvent = remotes:getEventAsync("ViewModelRemote")
+local ShootEvent: RemoteEvent = remotes:getEventAsync("Shoot")
 
 local ViewModelTP
 local ViewModel
@@ -144,8 +145,10 @@ function Gun:Init()
             equipped = true
             ViewModelRemote:FireServer(ViewModelTP, equipped, GunName)
             self:SetArmsTransparency(plr, 1)
+        end)
 
-            
+        gun.Activated:Connect(function()
+            ShootEvent:FireServer(camera.CFrame)
         end)
 
         gun.Unequipped:Connect(function()
